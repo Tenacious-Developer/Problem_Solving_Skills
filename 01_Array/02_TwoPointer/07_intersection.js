@@ -197,6 +197,26 @@ function intersectWithFrequency(arr1, arr2) {
     return result;
 }
 
+
+var intersection = function(nums1, nums2) {
+    let freqNums1 = {};
+    for(let i = 0; i < nums1.length; i++) {
+        let element = nums1[i];
+        freqNums1[element] = true; // Store existence as a boolean
+    }
+
+    let freqNums2 = {};
+    for(let i = 0; i < nums2.length; i++) {
+        let element = nums2[i];
+        if(freqNums1[element]) {
+            freqNums2[element] = 1; // Add to freqNums2 only if it exists in freqNums1
+        }
+    }
+
+    // Convert keys from string to number and return the array of integers
+    return Object.keys(freqNums2).map(Number);
+};
+
 /*
 Pattern Recognition:
 - Two sorted sequences + common elements → two pointers technique
