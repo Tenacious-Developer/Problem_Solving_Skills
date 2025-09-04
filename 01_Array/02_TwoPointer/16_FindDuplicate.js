@@ -5,7 +5,10 @@ FIND DUPLICATE NUMBER
 
 
 Problem Statement:
-Given an array nums containing n + 1 integers where each integer is between 1 and n (inclusive), find the duplicate number. There is only one repeated number in nums, return this repeated number. You must solve the problem without modifying the array nums and uses only constant extra space.
+Given an array nums containing n + 1 integers where each integer is between 1 and n 
+(inclusive), find the duplicate number. There is only one repeated number in nums, 
+return this repeated number. You must solve the problem without modifying the array 
+nums and uses only constant extra space.
 
 
 Example:
