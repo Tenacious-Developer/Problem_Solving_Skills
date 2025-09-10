@@ -5,10 +5,7 @@ FIND DUPLICATE NUMBER
 
 
 Problem Statement:
-Given an array nums containing n + 1 integers where each integer is between 1 and n 
-(inclusive), find the duplicate number. There is only one repeated number in nums, 
-return this repeated number. You must solve the problem without modifying the array 
-nums and uses only constant extra space.
+Given an array nums containing n + 1 integers where each integer is between 1 and n (inclusive), find the duplicate number. There is only one repeated number in nums, return this repeated number. You must solve the problem without modifying the array nums and uses only constant extra space.
 
 
 Example:
@@ -142,7 +139,38 @@ Time and Space Complexity (Optimized):
 All Other Approaches (that uses other data structures or algorithms other than this array topic):
 
 
-1. Hash Set Approach:
+1. Cyclic Sort Approach:
+Logic:
+- Place each number at its correct index position (number i at index i-1)
+- During sorting, when we find a number already at its correct position, it's the duplicate
+- Violates "don't modify array" constraint but shows the pattern
+- Would work perfectly if modification was allowed
+
+Code:
+function findDuplicateCyclicSort(nums) {
+    // Note: This approach VIOLATES the constraint of not modifying the array
+    // Included for educational purposes to show cyclic sort pattern
+    const n = nums.length;
+    let i = 0;
+    
+    while (i < n) {
+        const correctIndex = nums[i] - 1;
+        if (nums[i] !== nums[correctIndex]) {
+            [nums[i], nums[correctIndex]] = [nums[correctIndex], nums[i]];
+        } else if (correctIndex !== i) {
+            // Found duplicate - number is at correct position but we're not at that index
+            return nums[i];
+        } else {
+            i++;
+        }
+    }
+    
+    return -1;
+}
+Time: O(n), Space: O(1), but VIOLATES "don't modify array" constraint
+Cyclic Sort Approach is different then Cycle Detection
+
+2. Hash Set Approach:
 Logic:
 - Use Set to track seen elements during traversal
 - When encounter element already in Set, return it as duplicate
@@ -164,7 +192,32 @@ function findDuplicateSet(nums) {
 Time: O(n), Space: O(n)
 
 
-2. Sorting Approach:
+3. Negative Marking Approach:
+Logic:
+- Use array indices as hash by marking visited numbers with negative values
+- When accessing an already negative index, we found the duplicate
+- Violates "don't modify array" constraint
+
+Code:
+function findDuplicateNegativeMarking(nums) {
+    // Note: This approach VIOLATES the constraint of not modifying the array
+    for (let i = 0; i < nums.length; i++) {
+        const absNum = Math.abs(nums[i]);
+        const index = absNum - 1;
+        
+        if (nums[index] < 0) {
+            return absNum; // Found duplicate
+        } else {
+            nums[index] = -nums[index]; // Mark as visited
+        }
+    }
+    
+    return -1;
+}
+Time: O(n), Space: O(1), but VIOLATES "don't modify array" constraint
+
+
+4. Sorting Approach:
 Logic:
 - Sort the array and check adjacent elements
 - Return first pair of adjacent equal elements
@@ -185,7 +238,7 @@ function findDuplicateSort(nums) {
 Time: O(n log n), Space: O(1)
 
 
-3. Binary Search Approach:
+5. Binary Search Approach:
 Logic:
 - Use binary search on possible values [1, n]
 - For each mid value, count elements ≤ mid
@@ -218,18 +271,20 @@ Time: O(n log n), Space: O(1)
 
 
 Pattern Recognition:
-- Array with constrained values → can be treated as implicit linked list
+- Array with constrained values → can be treated as implicit linked list or use cyclic sort
 - Cycle detection problem → Floyd's tortoise and hare algorithm
 - Pigeonhole principle → n+1 elements in range [1,n] guarantees duplicate
 - Phase-based algorithm → first find cycle, then find cycle start
 
 
 Method Comparison:
-1. Floyd's Cycle: O(n) time, O(1) space, meets all constraints, optimal
-2. Hash Set: O(n) time, O(n) space, violates space constraint
-3. Binary Search: O(n log n) time, O(1) space, meets constraints but slower
-4. Sorting: O(n log n) time, O(1) space, violates modification constraint
-5. Brute Force: O(n²) time, O(1) space, too slow for large inputs
+1. Floyd's Cycle: O(n) time, O(1) space, meets ALL constraints, optimal
+2. Binary Search: O(n log n) time, O(1) space, meets all constraints but slower
+3. Cyclic Sort: O(n) time, O(1) space, VIOLATES "don't modify" constraint
+4. Negative Marking: O(n) time, O(1) space, VIOLATES "don't modify" constraint
+5. Hash Set: O(n) time, O(n) space, violates space constraint
+6. Sorting: O(n log n) time, O(1) space, violates modification constraint
+7. Brute Force: O(n²) time, O(1) space, too slow for large inputs
 
 
 Pitfalls:
@@ -237,11 +292,13 @@ Pitfalls:
 - Confusing array indices with array values in pointer movements
 - Forgetting that values are 1-indexed while array indices are 0-indexed
 - Not implementing both phases of Floyd's algorithm correctly
+- Applying cyclic sort without considering the "don't modify array" constraint
 - Assuming other approaches meet the strict space and modification constraints
 
 
 Key Insights:
-- Floyd's Cycle Detection is the only approach meeting all constraints optimally
+- Floyd's Cycle Detection is the ONLY approach meeting ALL constraints optimally
+- Cyclic sort pattern applies but violates modification constraint
 - Array can represent linked list when values serve as pointers to indices
 - Pigeonhole principle guarantees exactly one duplicate exists
 - Two-phase algorithm: detect cycle existence, then find cycle entrance
@@ -260,6 +317,7 @@ Algorithm Variants:
 2. Multiple duplicates allowed vs exactly one duplicate
 3. Different value ranges and constraints
 4. Return duplicate count vs duplicate value
+5. Allow modification vs preserve array
 
 
 Review Schedule:
